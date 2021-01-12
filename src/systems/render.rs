@@ -1,12 +1,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-
 use specs::{ReadStorage, System, WriteExpect};
 
 use crate::components::*;
-use crate::resources;
 use crate::context::GameContext;
+use crate::resources;
 
 pub struct RenderingSystem {
     game_context: Rc<RefCell<GameContext>>,
@@ -26,15 +25,11 @@ impl RenderingSystem {
 
 impl<'a> System<'a> for RenderingSystem {
     type SystemData = (
-        ReadStorage<'a, Position>,
-        ReadStorage<'a, Renderable>,
         WriteExpect<'a, resources::GameState>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (_positions,
-            _renderables,
-            mut game_state,
+        let (mut game_state,
         ) = data;
 
         let ref mut game_context = self.game_context.borrow_mut();

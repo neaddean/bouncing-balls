@@ -1,5 +1,5 @@
 [package]
-name = "bouncing-balls"
+name = "balz"
 version = "0.1.0"
 authors = ["Dean De Carli <neaddean@gmail.com>"]
 edition = "2018"

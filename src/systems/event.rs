@@ -1,4 +1,5 @@
 use kiss3d::event::{Key, Modifiers};
+use nalgebra::Point3;
 use rand::{Rng, thread_rng};
 use specs::{join::Join, ReadStorage, System, Write, WriteExpect, WriteStorage};
 
@@ -18,10 +19,8 @@ impl<'a> System<'a> for EventSystem {
     type SystemData = (
         Write<'a, EventQueue>,
         Write<'a, EntityQueue>,
-        WriteStorage<'a, Position>,
         WriteStorage<'a, Velocity>,
         ReadStorage<'a, Ball>,
-        ReadStorage<'a, Bar>,
         WriteExpect<'a, GameState>,
     );
 
@@ -29,10 +28,8 @@ impl<'a> System<'a> for EventSystem {
         let (
             mut event_queue,
             mut entity_queue,
-            _positions,
             mut velocities,
             balls,
-            bars,
             mut game_state,
         ) = data;
 
@@ -44,33 +41,26 @@ impl<'a> System<'a> for EventSystem {
                         (Key::Tab, false, Modifiers::Shift) => {
                             // game_state.show_debug ^= true;
                         }
-                        (Key::Up, ..) => {
-                            for (vel, _) in (&mut velocities, &balls).join() {
-                                vel.x += 120.0 * num::signum(vel.x);
-                                vel.y += 120.0 * num::signum(vel.y);
-                            }
-                        }
-                        (Key::Down, ..) => {
-                            for (vel, _) in (&mut velocities, &balls).join() {
-                                vel.x -= 120.0 * num::signum(vel.x);
-                                vel.y -= 120.0 * num::signum(vel.y);
-                            }
-                        }
-                        (Key::Right, false, ..) => {
-                            for (vel, _) in (&mut velocities, &bars).join() {
-                                vel.x = 600.0;
-                            }
-                        }
-                        (Key::Left, false, ..) => {
-                            for (vel, _) in (&mut velocities, &bars).join() {
-                                vel.x = -600.0;
-                            }
-                        }
+                        // (Key::Up, ..) => {
+                        //     for (vel, _) in (&mut velocities, &balls).join() {
+                        //         vel.x += 120.0 * num::signum(vel.x);
+                        //         vel.y += 120.0 * num::signum(vel.y);
+                        //     }
+                        // }
+                        // (Key::Down, ..) => {
+                        //     for (vel, _) in (&mut velocities, &balls).join() {
+                        //         vel.x -= 120.0 * num::signum(vel.x);
+                        //         vel.y -= 120.0 * num::signum(vel.y);
+                        //     }
+                        // }
                         (Key::Space, ..) => {
                             entity_queue.push(EntityType::Ball {
-                                x: thread_rng().gen_range(-120.0..120.0),
-                                y: thread_rng().gen_range(-120.0..120.0),
-                                r: 25.0,
+                                point: Point3::new(
+                                    thread_rng().gen_range(-120.0..120.0),
+                                    thread_rng().gen_range(-120.0..120.0),
+                                    thread_rng().gen_range(-120.0..120.0),
+                                ),
+                                radius: 25.0,
                             });
                         }
                         (Key::F, false, Modifiers::Control) => {
@@ -82,33 +72,14 @@ impl<'a> System<'a> for EventSystem {
                         (Key::Escape, false, _) => {
                             game_state.continuing = false;
                         }
-                        (Key::B, ..) => {
-                            entity_queue.push(EntityType::Brick {
-                                x: thread_rng().gen_range(-400.0..400.0),
-                                y: thread_rng().gen_range(-300.0..300.0),
-                                health: thread_rng().gen_range(0..15),
-                            });
-                        }
                         _ => {}
                     }
                 }
-                Event::KeyUp(key_code, _key_mods) => match key_code {
-                    Key::Right => {
-                        for (vel, _) in (&mut velocities, &bars).join() {
-                            vel.x = 0.0;
-                        }
-                    }
-                    Key::Left => {
-                        for (vel, _) in (&mut velocities, &bars).join() {
-                            vel.x = 0.0;
-                        }
-                    }
-                    _ => {}
-                },
                 Event::CloseGame => {
                     game_state.continuing = false;
                 }
                 Event::WindowSize(_, _) => {}
+                Event::KeyUp(_, _) => {}
             }
         }
     }

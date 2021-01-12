@@ -1,3 +1,4 @@
+use nalgebra::{Isometry3, Vector3};
 use specs::{Component, VecStorage};
 
 #[derive(Component)]
@@ -12,31 +13,14 @@ pub struct Ball {
     pub radius: f32,
 }
 
-#[derive(Component)]
-#[storage(VecStorage)]
-pub struct Bar {
-    pub width: f32,
-    pub height: f32,
-}
-
-#[derive(Component)]
-#[storage(VecStorage)]
-pub struct Brick {
-    pub health: u8,
-    pub width: f32,
-    pub height: f32,
-}
-
-#[derive(Component, Default, Copy, Clone)]
+#[derive(Component, Copy, Clone)]
 #[storage(VecStorage)]
 pub struct Position {
-    pub x: f32,
-    pub y: f32,
+    pub position: Isometry3<f32>,
 }
 
-#[derive(Component, Default, Copy, Clone)]
+#[derive(Component, Copy, Clone)]
 #[storage(VecStorage)]
 pub struct Velocity {
-    pub x: f32,
-    pub y: f32,
+    pub vector: Vector3<f32>,
 }

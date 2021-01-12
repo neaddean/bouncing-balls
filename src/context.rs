@@ -2,12 +2,12 @@ use std::cell::{RefCell, RefMut};
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use kiss3d::scene::PlanarSceneNode;
+use kiss3d::scene::SceneNode;
 use kiss3d::window::Window;
 
 pub struct GameContext {
     window: Window,
-    gfx_manager: HashMap<u32, Rc<RefCell<PlanarSceneNode>>>,
+    gfx_manager: HashMap<u32, Rc<RefCell<SceneNode>>>,
     last_assigned_id: u32,
 }
 
@@ -28,7 +28,7 @@ impl GameContext {
         }
     }
 
-    pub fn store_gfx(&mut self, node: PlanarSceneNode) -> u32 {
+    pub fn store_gfx(&mut self, node: SceneNode) -> u32 {
         self.gfx_manager.insert(self.last_assigned_id, Rc::new(RefCell::new(node)));
         self.last_assigned_id += 1;
         return self.last_assigned_id - 1;
@@ -36,14 +36,14 @@ impl GameContext {
 
     pub fn remove_gfx(&mut self, node_id: u32) {
         let ref mut node = self.gfx_manager.get(&node_id)
-            .expect("could not find node with")
+            .expect("could not find node")
             .borrow_mut();
-        self.window.remove_planar_node(node);
+        self.window.remove_node(node);
     }
 
-    pub fn get_gfx(&mut self, node_id: u32) -> RefMut<PlanarSceneNode> {
+    pub fn get_gfx(&mut self, node_id: u32) -> RefMut<SceneNode> {
         self.gfx_manager.get(&node_id)
-            .expect("could not find node with")
+            .expect("could not find node")
             .borrow_mut()
     }
 }

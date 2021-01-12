@@ -4,7 +4,6 @@ use std::rc::Rc;
 
 
 use specs::{join::Join, ReadStorage, System};
-use nalgebra as na;
 use crate::components::*;
 
 use crate::context::GameContext;
@@ -36,8 +35,8 @@ impl<'a> System<'a> for UpdateRenderablesSystem {
 
         for (pos, rend) in (&positions, &renderables).join() {
             let mut this_obj = game_context.get_gfx(rend.gfx_id);
-            let pos = na::geometry::Translation2 { vector: na::Vector2::new(pos.x, pos.y) };
-            this_obj.set_local_translation(pos);
+            // let pos = na::geometry::Translation3 { vector: pos.point };
+            this_obj.set_local_transformation(pos.position.clone());
         }
     }
 }

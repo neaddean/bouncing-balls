@@ -1,6 +1,5 @@
-pub enum EntityType {
-    Ball { x: f32, y: f32, r: f32},
-    Brick { x: f32, y: f32, health: u8 },
-    Bar,
-}
+use nalgebra::Point3;
 
+pub enum EntityType {
+    Ball { point: Point3<f32>, radius: f32 },
+}
