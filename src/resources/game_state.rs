@@ -1,17 +1,6 @@
 use std::time::{Duration, Instant};
 
-use specs;
-
 use crate::context::GameContext;
-
-#[derive(Default)]
-pub struct EventQueue {
-    pub events: Vec<crate::systems::event_types::Event>,
-}
-
-pub type EntityQueue = Vec<crate::entities::EntityType>;
-pub type EntityRemovalQueue = Vec<specs::Entity>;
-
 
 pub struct GameState {
     pub show_fps: bool,
@@ -39,9 +28,7 @@ impl GameState {
             continuing: true,
         }
     }
-}
 
-impl GameState {
     pub fn tick(&mut self) {
         self.this_instant = Instant::now();
         self.this_duration = self.this_instant.duration_since(self.last_instant);

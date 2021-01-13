@@ -1,6 +1,8 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use kiss3d::camera::{ArcBall, FirstPerson};
+use nalgebra::Point3;
 use specs::{ReadStorage, System, WriteExpect};
 
 use crate::components::*;
@@ -26,14 +28,15 @@ impl RenderingSystem {
 impl<'a> System<'a> for RenderingSystem {
     type SystemData = (
         WriteExpect<'a, resources::GameState>,
+        WriteExpect<'a, resources::CameraBox>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
         let (mut game_state,
+            mut camerabox,
         ) = data;
-
-        let ref mut game_context = self.game_context.borrow_mut();
-        let ref mut window = game_context.window_mut();
+        let mut game_context = self.game_context.borrow_mut();
+        let mut window = game_context.window_mut();
         if game_state.sw_frame_limiter {
             self.accum += game_state.this_duration().as_secs_f32();
         } else {
@@ -41,7 +44,7 @@ impl<'a> System<'a> for RenderingSystem {
         }
         while self.accum >= 1.0 / game_state.sw_frame_limit_fps {
             self.accum -= 1.0 / game_state.sw_frame_limit_fps;
-            game_state.continuing = window.render();
+            game_state.continuing = window.render_with_camera(&mut *camerabox.camera.as_mut());
         }
     }
 }

@@ -5,7 +5,9 @@ mod constants;
 pub mod components;
 pub mod entities;
 pub mod gameloop;
-pub mod resources;
+// mod resources as resources_;
 pub mod systems;
 pub mod context;
+pub mod resources;
 
+// pub use resources_::resources;
