@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use kiss3d::camera::ArcBall;
+use kiss3d::camera::{ArcBall, FirstPerson};
 use kiss3d::window::{CanvasSetup, NumSamples, Window};
 use nalgebra::{Point3, Translation3};
 use specs::{DispatcherBuilder, World, WorldExt};
@@ -20,7 +20,7 @@ fn main() {
     let ref mut world = World::new();
     world.insert(GameState::new(&mut game_context.borrow_mut()));
 
-    let eye = Point3::new(10.0f32, 10.0, 10.0);
+    let eye = Point3::new(0.0, -30.0, 40.0);
     let at = Point3::origin();
     world.insert(CameraBox { camera: Box::new(ArcBall::new(eye, at)) });
 
@@ -46,7 +46,7 @@ fn main() {
     {
         let mut game_context = game_context.borrow_mut();
         let window = game_context.window_mut();
-        let mut floor = window.add_quad(15.0, 15.0, 10, 10);
+        let mut floor = window.add_quad(15.0, 15.0, 100, 100);
         floor.set_local_translation(Translation3::new(0.0, 0.0, 0.0));
         floor.set_color(0.0, 0.5, 0.25);
         game_context.store_gfx(floor);
