@@ -12,7 +12,10 @@ use balz::resources::{CameraBox, EntityQueue, GameState};
 use balz::systems::*;
 
 fn main() {
-    let canvas_config = CanvasSetup { vsync: true, samples: NumSamples::Two };
+    let canvas_config = CanvasSetup {
+        vsync: true,
+        samples: NumSamples::Two,
+    };
     let window = Window::new_with_setup("asdf", 800, 600, canvas_config);
 
     let game_context = Rc::new(RefCell::new(GameContext::new(window)));
@@ -22,7 +25,9 @@ fn main() {
 
     let eye = Point3::new(0.0, -30.0, 40.0);
     let at = Point3::origin();
-    world.insert(CameraBox { camera: Box::new(ArcBall::new(eye, at)) });
+    world.insert(CameraBox {
+        camera: Box::new(ArcBall::new(eye, at)),
+    });
 
     let ref mut dispatcher = DispatcherBuilder::new()
         .with(EventSystem, "events", &[])
@@ -54,4 +59,3 @@ fn main() {
 
     balz::gameloop::run(dispatcher, world);
 }
-

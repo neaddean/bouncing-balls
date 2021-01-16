@@ -1,11 +1,8 @@
-
-use specs::{Entities, System, Write, ReadStorage};
+use specs::{Entities, ReadStorage, System, Write};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::{
-    components::*,
-};
+use crate::components::*;
 use crate::context::GameContext;
 use crate::resources::EntityRemovalQueue;
 
@@ -13,14 +10,9 @@ pub struct EntityRemovalSystem {
     game_context: Rc<RefCell<GameContext>>,
 }
 
-
 impl EntityRemovalSystem {
-    pub fn new(
-        game_context: Rc<RefCell<GameContext>>,
-    ) -> Self {
-        EntityRemovalSystem {
-            game_context,
-        }
+    pub fn new(game_context: Rc<RefCell<GameContext>>) -> Self {
+        EntityRemovalSystem { game_context }
     }
 }
 
@@ -34,11 +26,7 @@ impl<'a> System<'a> for EntityRemovalSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            mut entity_removal_queue,
-            entites,
-            renderables,
-        ) = data;
+        let (mut entity_removal_queue, entites, renderables) = data;
 
         let ref mut game_context = self.game_context.borrow_mut();
         for entity_to_delete in entity_removal_queue.drain(..) {

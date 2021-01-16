@@ -15,9 +15,7 @@ pub struct RenderingSystem {
 }
 
 impl RenderingSystem {
-    pub fn new(
-        game_context: Rc<RefCell<GameContext>>,
-    ) -> Self {
+    pub fn new(game_context: Rc<RefCell<GameContext>>) -> Self {
         RenderingSystem {
             game_context,
             accum: 0.0,
@@ -32,9 +30,7 @@ impl<'a> System<'a> for RenderingSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut game_state,
-            mut camerabox,
-        ) = data;
+        let (mut game_state, mut camerabox) = data;
         let mut game_context = self.game_context.borrow_mut();
         let mut window = game_context.window_mut();
         if game_state.sw_frame_limiter {

@@ -14,9 +14,7 @@ pub struct InputSystem {
 }
 
 impl InputSystem {
-    pub fn new(
-        game_context: Rc<RefCell<GameContext>>,
-    ) -> Self {
+    pub fn new(game_context: Rc<RefCell<GameContext>>) -> Self {
         InputSystem {
             game_context,
             last_pressed: None,

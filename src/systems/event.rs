@@ -1,15 +1,15 @@
 use kiss3d::event::{Key, Modifiers};
 use nalgebra::Point3;
-use rand::{Rng, thread_rng};
+use rand::{thread_rng, Rng};
 use specs::{join::Join, ReadStorage, System, Write, WriteExpect, WriteStorage};
 
+use crate::entities::EntityType;
+use crate::resources::GameState;
+use crate::systems::event_types::Event;
 use crate::{
     components::*,
     resources::{EntityQueue, EventQueue},
 };
-use crate::entities::EntityType;
-use crate::resources::GameState;
-use crate::systems::event_types::Event;
 
 pub struct EventSystem;
 
@@ -25,13 +25,7 @@ impl<'a> System<'a> for EventSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            mut event_queue,
-            mut entity_queue,
-            mut velocities,
-            balls,
-            mut game_state,
-        ) = data;
+        let (mut event_queue, mut entity_queue, mut velocities, balls, mut game_state) = data;
 
         for event in event_queue.events.drain(..) {
             // println!("New event: {:?}", event);

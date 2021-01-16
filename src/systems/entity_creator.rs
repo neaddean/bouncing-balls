@@ -4,25 +4,20 @@ use std::rc::Rc;
 use nalgebra::{Isometry3, Vector3};
 use specs::{Entities, ReadExpect, System, Write, WriteStorage};
 
+use crate::context::GameContext;
 use crate::{
     components::*,
     entities::EntityType,
     resources::{EntityQueue, GameState},
 };
-use crate::context::GameContext;
 
 pub struct EntityCreatorSystem {
     game_context: Rc<RefCell<GameContext>>,
 }
 
-
 impl EntityCreatorSystem {
-    pub fn new(
-        game_context: Rc<RefCell<GameContext>>,
-    ) -> Self {
-        EntityCreatorSystem {
-            game_context,
-        }
+    pub fn new(game_context: Rc<RefCell<GameContext>>) -> Self {
+        EntityCreatorSystem { game_context }
     }
 }
 
@@ -65,12 +60,13 @@ impl<'a> System<'a> for EntityCreatorSystem {
                     let gfx_id = game_context.store_gfx(sphere);
                     entites
                         .build_entity()
-                        .with(Ball {
-                            radius
-                        }, &mut ball_storage)
-                        .with(Position {
-                            position: transform,
-                        }, &mut positions)
+                        .with(Ball { radius }, &mut ball_storage)
+                        .with(
+                            Position {
+                                position: transform,
+                            },
+                            &mut positions,
+                        )
                         .with(Renderable { gfx_id }, &mut renderables)
                         .build();
                 }

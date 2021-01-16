@@ -1,33 +1,23 @@
-
 use std::cell::RefCell;
 use std::rc::Rc;
 
-
-use specs::{join::Join, ReadStorage, System};
 use crate::components::*;
+use specs::{join::Join, ReadStorage, System};
 
 use crate::context::GameContext;
-
 
 pub struct UpdateRenderablesSystem {
     game_context: Rc<RefCell<GameContext>>,
 }
 
 impl UpdateRenderablesSystem {
-    pub fn new(
-        game_context: Rc<RefCell<GameContext>>,
-    ) -> Self {
-        UpdateRenderablesSystem {
-            game_context,
-        }
+    pub fn new(game_context: Rc<RefCell<GameContext>>) -> Self {
+        UpdateRenderablesSystem { game_context }
     }
 }
 
 impl<'a> System<'a> for UpdateRenderablesSystem {
-    type SystemData = (
-        ReadStorage<'a, Position>,
-        ReadStorage<'a, Renderable>,
-    );
+    type SystemData = (ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
 
     fn run(&mut self, data: Self::SystemData) {
         let (positions, renderables) = data;
