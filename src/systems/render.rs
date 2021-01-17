@@ -1,11 +1,11 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use kiss3d::camera::{ArcBall, FirstPerson};
-use nalgebra::Point3;
-use specs::{ReadStorage, System, WriteExpect};
 
-use crate::components::*;
+
+use specs::{System, WriteExpect};
+
+
 use crate::context::GameContext;
 use crate::resources;
 
@@ -32,7 +32,7 @@ impl<'a> System<'a> for RenderingSystem {
     fn run(&mut self, data: Self::SystemData) {
         let (mut game_state, mut camerabox) = data;
         let mut game_context = self.game_context.borrow_mut();
-        let mut window = game_context.window_mut();
+        let window = game_context.window_mut();
         if game_state.sw_frame_limiter {
             self.accum += game_state.this_duration().as_secs_f32();
         } else {

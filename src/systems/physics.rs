@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use specs::{join::Join, Entities, ReadExpect, ReadStorage, System, Write, WriteStorage};
+use specs::{Entities, join::Join, ReadExpect, ReadStorage, System, Write, WriteStorage, WriteExpect};
 
 use crate::components::*;
 use crate::constants::SIMULATION_DURATION;
@@ -26,23 +26,28 @@ impl PhysicsSystem {
 impl<'a> System<'a> for PhysicsSystem {
     type SystemData = (
         WriteStorage<'a, Position>,
-        WriteStorage<'a, Velocity>,
         ReadStorage<'a, Ball>,
         ReadExpect<'a, resources::GameState>,
         Write<'a, EntityRemovalQueue>,
+        WriteExpect<'a, resources::PhysicsWorld>,
         Entities<'a>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut positions, mut velocities, balls, game_state, mut entity_removal_queue, entities) =
+        let (mut positions,
+            balls,
+            game_state,
+            _entity_removal_queue,
+            _,
+            entities) =
             data;
 
         self.accum += game_state.this_duration().as_secs_f32();
         while self.accum > SIMULATION_DURATION {
             self.accum -= SIMULATION_DURATION;
 
-            for (entity, position, velocity, ball) in
-                (&entities, &mut positions, &mut velocities, &balls).join()
+            for (_entity, _position, _ball) in
+            (&entities, &mut positions, &balls).join()
             {}
         }
     }

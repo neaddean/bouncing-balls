@@ -19,13 +19,12 @@ impl<'a> System<'a> for EventSystem {
     type SystemData = (
         Write<'a, EventQueue>,
         Write<'a, EntityQueue>,
-        WriteStorage<'a, Velocity>,
         ReadStorage<'a, Ball>,
         WriteExpect<'a, GameState>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (mut event_queue, mut entity_queue, mut velocities, balls, mut game_state) = data;
+        let (mut event_queue, mut entity_queue, _balls, mut game_state) = data;
 
         for event in event_queue.events.drain(..) {
             // println!("New event: {:?}", event);

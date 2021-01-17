@@ -27,7 +27,6 @@ impl<'a> System<'a> for EntityCreatorSystem {
     type SystemData = (
         Write<'a, EntityQueue>,
         Entities<'a>,
-        WriteStorage<'a, Velocity>,
         WriteStorage<'a, Position>,
         WriteStorage<'a, Renderable>,
         WriteStorage<'a, Ball>,
@@ -38,11 +37,10 @@ impl<'a> System<'a> for EntityCreatorSystem {
         let (
             mut entity_queue,
             entites,
-            mut velocities,
             mut positions,
             mut renderables,
             mut ball_storage,
-            game_state,
+            _game_state,
         ) = data;
 
         let ref mut game_context = self.game_context.borrow_mut();

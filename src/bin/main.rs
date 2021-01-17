@@ -1,14 +1,14 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use kiss3d::camera::{ArcBall, FirstPerson};
+use kiss3d::camera::{ArcBall};
 use kiss3d::window::{CanvasSetup, NumSamples, Window};
 use nalgebra::{Point3, Translation3};
 use specs::{DispatcherBuilder, World, WorldExt};
 
 use balz::context::GameContext;
 use balz::entities;
-use balz::resources::{CameraBox, EntityQueue, GameState};
+use balz::resources::{CameraBox, EntityQueue, GameState, PhysicsWorld};
 use balz::systems::*;
 
 fn main() {
@@ -20,8 +20,11 @@ fn main() {
 
     let game_context = Rc::new(RefCell::new(GameContext::new(window)));
 
+
     let ref mut world = World::new();
     world.insert(GameState::new(&mut game_context.borrow_mut()));
+
+    world.insert(PhysicsWorld::new());
 
     let eye = Point3::new(0.0, -30.0, 40.0);
     let at = Point3::origin();
