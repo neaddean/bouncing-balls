@@ -4,11 +4,12 @@ use std::rc::Rc;
 use nalgebra::{Isometry3, Vector3};
 use ncollide3d::shape::ShapeHandle;
 use ncollide3d::transformation::ToTriMesh;
+use nphysics3d::material::{BasicMaterial, MaterialHandle};
 use nphysics3d::object::{BodyPartHandle, BodyStatus, ColliderDesc, Ground, RigidBodyDesc};
 use specs::{Entities, System, Write, WriteExpect, WriteStorage};
 
-use crate::context::GameContext;
 use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
+use crate::context::GameContext;
 
 pub struct EntityCreatorSystem {
     game_context: Rc<RefCell<GameContext>>,
@@ -68,7 +69,9 @@ impl<'a> System<'a> for EntityCreatorSystem {
                     let body_handle = physics_world.bodies.insert(rigid_body);
 
                     let shape = ShapeHandle::new(ncollide3d::shape::Ball::new(radius));
-                    let collider = ColliderDesc::new(shape).build(BodyPartHandle(body_handle, 0));
+                    let collider = ColliderDesc::new(shape)
+                        .material(MaterialHandle::new(BasicMaterial::new(2.0, 0.8)))
+                        .build(BodyPartHandle(body_handle, 0));
                     let collider_handle = physics_world.colliders.insert(collider);
 
                     entites
@@ -86,7 +89,7 @@ impl<'a> System<'a> for EntityCreatorSystem {
                 }
                 EntityType::Ground { thickness } => {
                     let ground_shape =
-                        ncollide3d::shape::Cuboid::new(Vector3::new(15.0, thickness, 15.0));
+                        ncollide3d::shape::Cuboid::new(Vector3::new(30.0, thickness, 30.0));
                     let mut ground_node = game_context
                         .window_mut()
                         .add_trimesh(ground_shape.to_trimesh(()), Vector3::new(1.0, 1.0, 1.0));

@@ -49,11 +49,11 @@ impl<'a> System<'a> for EventSystem {
                         (Key::Space, ..) => {
                             entity_queue.push(EntityType::Ball {
                                 point: Point3::new(
-                                    thread_rng().gen_range(-1.0..10.0),
-                                    thread_rng().gen_range(-1.0..1.0),
-                                    thread_rng().gen_range(-1.0..10.0),
+                                    thread_rng().gen_range(-10.0..10.0),
+                                    thread_rng().gen_range(1.0..25.0),
+                                    thread_rng().gen_range(-10.0..10.0),
                                 ),
-                                radius: 2.0,
+                                radius: 0.25,
                             });
                         }
                         (Key::F, false, Modifiers::Control) => {
