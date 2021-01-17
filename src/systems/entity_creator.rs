@@ -8,8 +8,8 @@ use nphysics3d::material::{BasicMaterial, MaterialHandle};
 use nphysics3d::object::{BodyPartHandle, BodyStatus, ColliderDesc, Ground, RigidBodyDesc};
 use specs::{Entities, System, Write, WriteExpect, WriteStorage};
 
-use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
 use crate::context::GameContext;
+use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
 
 pub struct EntityCreatorSystem {
     game_context: Rc<RefCell<GameContext>>,

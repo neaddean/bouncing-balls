@@ -1,4 +1,4 @@
-use specs::{ReadExpect,  System, WriteExpect};
+use specs::{ReadExpect, System, WriteExpect};
 
 use crate::constants::SIMULATION_DURATION;
 

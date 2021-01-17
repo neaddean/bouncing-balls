@@ -36,15 +36,14 @@ fn main() {
 
     let eye = na::Point3::new(10.0, 30.0, 10.0);
     let at = na::Point3::origin();
-    world.insert(CameraBox {
-        camera: Box::new(ArcBall::new_with_frustrum(
-            std::f32::consts::PI / 4.0,
-            0.1,
-            8096.0,
-            eye,
-            at,
-        )),
-    });
+    {
+        let mut camera =
+            ArcBall::new_with_frustrum(std::f32::consts::PI / 4.0, 0.1, 1024.0, eye, at);
+        camera.set_min_pitch(0.0);
+        world.insert(CameraBox {
+            camera: Box::new(camera),
+        });
+    }
 
     let ref mut dispatcher = DispatcherBuilder::new()
         .with(EventSystem, "events", &[])
