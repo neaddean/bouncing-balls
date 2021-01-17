@@ -1,12 +1,8 @@
-
-
 use kiss3d;
 use specs;
 
 pub use game_state::GameState;
 pub use physics::PhysicsWorld;
-
-
 
 mod game_state;
 mod physics;

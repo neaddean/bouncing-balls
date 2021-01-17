@@ -1,7 +1,9 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use specs::{Entities, join::Join, Read, ReadExpect, ReadStorage, System, Write, WriteExpect, WriteStorage};
+use specs::{
+    join::Join, Entities, Read, ReadExpect, ReadStorage, System, Write, WriteExpect, WriteStorage,
+};
 
 use crate::components::*;
 use crate::constants::SIMULATION_DURATION;
@@ -15,9 +17,7 @@ pub struct PhysicsSystem {
 
 impl PhysicsSystem {
     pub fn new() -> Self {
-        PhysicsSystem {
-            accum: 0.0,
-        }
+        PhysicsSystem { accum: 0.0 }
     }
 }
 
@@ -28,10 +28,7 @@ impl<'a> System<'a> for PhysicsSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (
-            game_state,
-            mut physical_world) =
-            data;
+        let (game_state, mut physical_world) = data;
 
         self.accum += game_state.this_duration().as_secs_f32();
         while self.accum > SIMULATION_DURATION {

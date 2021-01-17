@@ -1,10 +1,10 @@
+use crate::constants::SIMULATION_DURATION;
+use log::debug;
 use nalgebra::{RealField, Vector3};
 use nphysics3d::force_generator::DefaultForceGeneratorSet;
 use nphysics3d::joint::DefaultJointConstraintSet;
 use nphysics3d::object::{DefaultBodySet, DefaultColliderSet};
 use nphysics3d::world::{DefaultGeometricalWorld, DefaultMechanicalWorld};
-use log::debug;
-use crate::constants::SIMULATION_DURATION;
 
 pub struct PhysicsWorldN<N: RealField> {
     pub mechanical_world: DefaultMechanicalWorld<N>,

@@ -1,10 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-
-
 use specs::{System, WriteExpect};
-
 
 use crate::context::GameContext;
 use crate::resources;

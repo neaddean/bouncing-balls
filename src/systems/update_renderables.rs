@@ -19,16 +19,14 @@ impl UpdateRenderablesSystem {
 }
 
 impl<'a> System<'a> for UpdateRenderablesSystem {
-    type SystemData = (ReadStorage<'a, Physical>,
-                       ReadStorage<'a, Renderable>,
-                       ReadExpect<'a, resources::PhysicsWorld>,
+    type SystemData = (
+        ReadStorage<'a, Physical>,
+        ReadStorage<'a, Renderable>,
+        ReadExpect<'a, resources::PhysicsWorld>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (physicals,
-            renderables,
-            physical_world,
-        ) = data;
+        let (physicals, renderables, physical_world) = data;
         let ref mut game_context = self.game_context.borrow_mut();
 
         for (phys, rend) in (&physicals, &renderables).join() {

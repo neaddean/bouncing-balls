@@ -11,7 +11,7 @@ mod entity_remove;
 mod event;
 pub mod event_types;
 mod input;
+mod physical_entities;
 mod physics;
 mod render;
 mod update_renderables;
-mod physical_entities;

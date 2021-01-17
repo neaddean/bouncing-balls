@@ -7,8 +7,8 @@ use ncollide3d::transformation::ToTriMesh;
 use nphysics3d::object::{BodyPartHandle, BodyStatus, ColliderDesc, Ground, RigidBodyDesc};
 use specs::{Entities, System, Write, WriteExpect, WriteStorage};
 
-use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
 use crate::context::GameContext;
+use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
 
 pub struct EntityCreatorSystem {
     game_context: Rc<RefCell<GameContext>>,
@@ -68,8 +68,7 @@ impl<'a> System<'a> for EntityCreatorSystem {
                     let body_handle = physics_world.bodies.insert(rigid_body);
 
                     let shape = ShapeHandle::new(ncollide3d::shape::Ball::new(radius));
-                    let collider = ColliderDesc::new(shape)
-                        .build(BodyPartHandle(body_handle, 0));
+                    let collider = ColliderDesc::new(shape).build(BodyPartHandle(body_handle, 0));
                     let collider_handle = physics_world.colliders.insert(collider);
 
                     entites
@@ -86,15 +85,17 @@ impl<'a> System<'a> for EntityCreatorSystem {
                         .build();
                 }
                 EntityType::Ground { thickness } => {
-                    let ground_shape = ncollide3d::shape::Cuboid::new(
-                        Vector3::new(15.0, thickness, 15.0));
-                    let mut ground_node = game_context.window_mut().add_trimesh(
-                        ground_shape.to_trimesh(()), Vector3::new(1.0, 1.0, 1.0));
+                    let ground_shape =
+                        ncollide3d::shape::Cuboid::new(Vector3::new(15.0, thickness, 15.0));
+                    let mut ground_node = game_context
+                        .window_mut()
+                        .add_trimesh(ground_shape.to_trimesh(()), Vector3::new(1.0, 1.0, 1.0));
 
                     let translation = Vector3::new(0.0, -thickness, 0.0);
                     let rotation = Vector3::new(0.0, 0.0, 0.0);
 
-                    ground_node.set_local_transformation(Isometry3::new(translation.clone(), rotation));
+                    ground_node
+                        .set_local_transformation(Isometry3::new(translation.clone(), rotation));
                     ground_node.set_color(0.0, 0.5, 0.25);
 
                     let ground_handle = physics_world.bodies.insert(Ground::new());
