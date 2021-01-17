@@ -1,15 +1,9 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use specs::{ReadExpect,  System, WriteExpect};
 
-use specs::{
-    join::Join, Entities, Read, ReadExpect, ReadStorage, System, Write, WriteExpect, WriteStorage,
-};
-
-use crate::components::*;
 use crate::constants::SIMULATION_DURATION;
-use crate::context::GameContext;
+
 use crate::resources;
-use crate::resources::{EntityRemovalQueue, GameState};
+use crate::resources::GameState;
 
 pub struct PhysicsSystem {
     accum: f32,
