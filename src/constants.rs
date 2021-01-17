@@ -1,2 +1,2 @@
-pub const SIMULATION_HZ: f32 = 100.0;
+pub const SIMULATION_HZ: f32 = 60.0;
 pub const SIMULATION_DURATION: f32 = 1.0 / SIMULATION_HZ;

@@ -21,7 +21,7 @@ impl GameState {
             this_instant: Instant::now(),
             last_instant: Instant::now(),
             show_fps: true,
-            sw_frame_limiter: false,
+            sw_frame_limiter: true,
             sw_frame_limit_fps: 60.0,
             screen_size: (window.width() as f32, window.height() as f32),
             this_duration: Default::default(),

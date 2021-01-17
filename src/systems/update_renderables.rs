@@ -1,10 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::components::*;
-use specs::{join::Join, ReadStorage, System};
+use log::trace;
+use specs::{join::Join, ReadExpect, ReadStorage, System};
 
+use crate::components::*;
 use crate::context::GameContext;
+use crate::resources;
 
 pub struct UpdateRenderablesSystem {
     game_context: Rc<RefCell<GameContext>>,
@@ -17,16 +19,24 @@ impl UpdateRenderablesSystem {
 }
 
 impl<'a> System<'a> for UpdateRenderablesSystem {
-    type SystemData = (ReadStorage<'a, Position>, ReadStorage<'a, Renderable>);
+    type SystemData = (ReadStorage<'a, Physical>,
+                       ReadStorage<'a, Renderable>,
+                       ReadExpect<'a, resources::PhysicsWorld>,
+    );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (positions, renderables) = data;
+        let (physicals,
+            renderables,
+            physical_world,
+        ) = data;
         let ref mut game_context = self.game_context.borrow_mut();
 
-        for (pos, rend) in (&positions, &renderables).join() {
-            let mut this_obj = game_context.get_gfx(rend.gfx_id);
-            // let pos = na::geometry::Translation3 { vector: pos.point };
-            this_obj.set_local_transformation(pos.position.clone());
+        for (phys, rend) in (&physicals, &renderables).join() {
+            let col = physical_world.colliders.get(phys.collider_handle).unwrap();
+            let mut gfx_node = game_context.get_gfx(rend.gfx_id);
+            let pos = *col.position();
+            trace!("{:?}", &pos);
+            gfx_node.set_local_transformation(pos);
         }
     }
 }

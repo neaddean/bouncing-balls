@@ -1,4 +1,4 @@
-use nalgebra::Isometry3;
+use nphysics3d::object::{DefaultBodyHandle, DefaultColliderHandle};
 use specs::{Component, VecStorage};
 
 #[derive(Component)]
@@ -15,6 +15,7 @@ pub struct Ball {
 
 #[derive(Component, Copy, Clone)]
 #[storage(VecStorage)]
-pub struct Position {
-    pub position: Isometry3<f32>,
+pub struct Physical {
+    pub body_handle: DefaultBodyHandle,
+    pub collider_handle: DefaultColliderHandle,
 }

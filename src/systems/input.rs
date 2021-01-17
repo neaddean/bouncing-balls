@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use kiss3d::event::{Action, Key, WindowEvent};
+use log::trace;
 use specs::{System, Write};
 
 use crate::context::GameContext;
@@ -32,7 +33,7 @@ impl<'a> System<'a> for InputSystem {
         let window = game_context.window();
 
         for event in window.events().iter() {
-            println!("{:?}", event.value);
+            trace!("{:?}", event.value);
             match event.value {
                 WindowEvent::Key(keycode, Action::Press, keymods) => {
                     let repeated = if (self.last_pressed.is_some())

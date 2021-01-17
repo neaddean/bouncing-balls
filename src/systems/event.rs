@@ -1,7 +1,7 @@
 use kiss3d::event::{Key, Modifiers};
 use nalgebra::Point3;
 use rand::{thread_rng, Rng};
-use specs::{join::Join, ReadStorage, System, Write, WriteExpect, WriteStorage};
+use specs::{ReadStorage, System, Write, WriteExpect};
 
 use crate::entities::EntityType;
 use crate::resources::GameState;
@@ -49,11 +49,11 @@ impl<'a> System<'a> for EventSystem {
                         (Key::Space, ..) => {
                             entity_queue.push(EntityType::Ball {
                                 point: Point3::new(
-                                    thread_rng().gen_range(-120.0..120.0),
-                                    thread_rng().gen_range(-120.0..120.0),
-                                    thread_rng().gen_range(-120.0..120.0),
+                                    thread_rng().gen_range(-1.0..10.0),
+                                    thread_rng().gen_range(-1.0..1.0),
+                                    thread_rng().gen_range(-1.0..10.0),
                                 ),
-                                radius: 25.0,
+                                radius: 2.0,
                             });
                         }
                         (Key::F, false, Modifiers::Control) => {
