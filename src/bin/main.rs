@@ -18,7 +18,7 @@ fn main() {
             // .add_filter_allow_str("balz")
             .set_time_format("%H:%M:%S%.3f".to_string())
             .build(),
-    );
+    ).expect("could not setup logging");
 
     let canvas_config = CanvasSetup {
         vsync: false,
@@ -54,19 +54,12 @@ fn main() {
     {
         let mut entity_queue = world.write_resource::<EntityQueue>();
         entity_queue.push(entities::EntityType::Ball {
-            point: na::Point3::new(0.0, 0.0, 1.0),
+            point: na::Point3::new(0.0, 10.0, 0.0),
             radius: 0.25,
         });
-    }
-    {
-        let mut game_context = game_context.borrow_mut();
-        let window = game_context.window_mut();
-        let mut floor = window.add_quad(15.0, 15.0, 100, 100);
-        let translation = na::Vector3::new(0.0, 0.0, 0.0);
-        let rotation = na::Vector3::new(std::f32::consts::PI / 2.0, 0.0, 0.0);
-        floor.set_local_transformation(na::Isometry3::new(translation, rotation));
-        floor.set_color(0.0, 0.5, 0.25);
-        game_context.store_gfx(floor);
+        entity_queue.push(entities::EntityType::Ground {
+            thickness: 0.1,
+        });
     }
 
     balz::gameloop::run(dispatcher, world);

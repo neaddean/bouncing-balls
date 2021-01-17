@@ -2,10 +2,12 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use nalgebra::{Isometry3, Vector3};
-use nphysics3d::object::{BodyStatus, ColliderDesc, RigidBodyDesc, BodyPartHandle};
+use ncollide3d::shape::ShapeHandle;
+use ncollide3d::transformation::ToTriMesh;
+use nphysics3d::object::{BodyPartHandle, BodyStatus, ColliderDesc, Ground, RigidBodyDesc};
 use specs::{Entities, System, Write, WriteExpect, WriteStorage};
 
-use crate::{components::*, entities::EntityType, resources::{EntityQueue}, resources};
+use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
 use crate::context::GameContext;
 
 pub struct EntityCreatorSystem {
@@ -65,7 +67,7 @@ impl<'a> System<'a> for EntityCreatorSystem {
                         .build();
                     let body_handle = physics_world.bodies.insert(rigid_body);
 
-                    let shape = ncollide3d::shape::ShapeHandle::new(ncollide3d::shape::Ball::new(1.5));
+                    let shape = ShapeHandle::new(ncollide3d::shape::Ball::new(radius));
                     let collider = ColliderDesc::new(shape)
                         .build(BodyPartHandle(body_handle, 0));
                     let collider_handle = physics_world.colliders.insert(collider);
@@ -82,6 +84,25 @@ impl<'a> System<'a> for EntityCreatorSystem {
                         )
                         .with(Renderable { gfx_id }, &mut renderables)
                         .build();
+                }
+                EntityType::Ground { thickness } => {
+                    let ground_shape = ncollide3d::shape::Cuboid::new(
+                        Vector3::new(15.0, thickness, 15.0));
+                    let mut ground_node = game_context.window_mut().add_trimesh(
+                        ground_shape.to_trimesh(()), Vector3::new(1.0, 1.0, 1.0));
+
+                    let translation = Vector3::new(0.0, -thickness, 0.0);
+                    let rotation = Vector3::new(0.0, 0.0, 0.0);
+
+                    ground_node.set_local_transformation(Isometry3::new(translation.clone(), rotation));
+                    ground_node.set_color(0.0, 0.5, 0.25);
+
+                    let ground_handle = physics_world.bodies.insert(Ground::new());
+
+                    let co = ColliderDesc::new(ShapeHandle::new(ground_shape))
+                        .translation(translation)
+                        .build(BodyPartHandle(ground_handle, 0));
+                    physics_world.colliders.insert(co);
                 }
             }
         }
