@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use kiss3d::event::{Action, Key, WindowEvent};
-use log::trace;
+use tracing::trace;
 use specs::{System, Write};
 
 use crate::context::GameContext;

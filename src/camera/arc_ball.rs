@@ -7,8 +7,6 @@ use kiss3d::window::Canvas;
 use na::{Isometry3, Matrix4, Perspective3, Point3, Unit, UnitQuaternion, Vector2, Vector3};
 use nalgebra as na;
 
-use log::info;
-
 /// Arc-ball camera mode.
 ///
 /// An arc-ball camera is a camera rotating around a fixed point (the focus point) and always

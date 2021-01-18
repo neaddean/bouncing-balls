@@ -8,8 +8,8 @@ use nphysics3d::material::{BasicMaterial, MaterialHandle};
 use nphysics3d::object::{BodyPartHandle, BodyStatus, ColliderDesc, Ground, RigidBodyDesc};
 use specs::{Entities, System, Write, WriteExpect, WriteStorage};
 
-use crate::context::GameContext;
 use crate::{components::*, entities::EntityType, resources, resources::EntityQueue};
+use crate::context::GameContext;
 
 pub struct EntityCreatorSystem {
     game_context: Rc<RefCell<GameContext>>,
@@ -51,11 +51,12 @@ impl<'a> System<'a> for EntityCreatorSystem {
                     // create node
                     let mut node = game_context.window_mut().add_sphere(radius);
                     node.set_color(1.0, 0.0, 0.0);
-                    let gfx_id = game_context.store_gfx(node);
 
                     let translation = Vector3::from(point.coords);
                     let rotation = Vector3::new(0.0, 0.0, 0.0);
                     let transform = Isometry3::new(translation, rotation);
+
+                    // node.set_local_transformation(transform.clone());
 
                     let rigid_body = RigidBodyDesc::new()
                         .position(transform.clone())
@@ -71,9 +72,12 @@ impl<'a> System<'a> for EntityCreatorSystem {
                     let shape = ShapeHandle::new(ncollide3d::shape::Ball::new(radius));
                     let collider = ColliderDesc::new(shape)
                         .material(MaterialHandle::new(BasicMaterial::new(2.0, 0.8)))
+                        .margin(0.5)
+                        .linear_prediction(0.25)
                         .build(BodyPartHandle(body_handle, 0));
                     let collider_handle = physics_world.colliders.insert(collider);
 
+                    let gfx_id = game_context.store_gfx(node);
                     entites
                         .build_entity()
                         .with(Ball { radius }, &mut ball_storage)

@@ -50,7 +50,7 @@ impl<'a> System<'a> for EventSystem {
                             entity_queue.push(EntityType::Ball {
                                 point: Point3::new(
                                     thread_rng().gen_range(-10.0..10.0),
-                                    thread_rng().gen_range(1.0..25.0),
+                                    thread_rng().gen_range(5.0..25.0),
                                     thread_rng().gen_range(-10.0..10.0),
                                 ),
                                 radius: 1.0,

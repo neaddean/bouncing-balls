@@ -13,14 +13,7 @@ use balz::resources::{CameraBox, EntityQueue, GameState, PhysicsWorld};
 use balz::systems::*;
 
 fn main() {
-    simplelog::SimpleLogger::init(
-        simplelog::LevelFilter::Info,
-        simplelog::ConfigBuilder::new()
-            // .add_filter_allow_str("balz")
-            .set_time_format("%H:%M:%S%.3f".to_string())
-            .build(),
-    )
-        .expect("could not setup logging");
+    balz::setup_logging();
 
     let canvas_config = CanvasSetup {
         vsync: false,
@@ -39,16 +32,18 @@ fn main() {
         let eye = na::Point3::new(10.0, 30.0, 10.0);
         let at = na::Point3::origin();
         let mut camera = ArcBall::new_with_frustrum(std::f32::consts::PI / 4.0, 0.1, 1024.0, eye, at);
-        camera.set_max_pitch(std::f32::consts::PI / 2.0);
+        camera.set_max_pitch(std::f32::consts::PI / 2.0 * 0.92);
+        camera.set_min_dist(5.0);
+        camera.set_max_dist(100.0);
         world.insert(CameraBox { camera: Box::new(camera) });
     }
     let ref mut dispatcher = DispatcherBuilder::new()
         .with(EventSystem, "events", &[])
-        .with(PhysicsSystem::new(), "physics", &["events"])
+        // .with(PhysicsSystem::new(), "physics", &["events"])
         .with_thread_local(EntityCreatorSystem::new(Rc::clone(&game_context)))
-        .with_thread_local(EntityRemovalSystem::new(Rc::clone(&game_context)))
+        .with_thread_local(PhysicsSystem::new())
         .with_thread_local(InputSystem::new(Rc::clone(&game_context)))
-        .with_thread_local(UpdateRenderablesSystem::new(Rc::clone(&game_context)))
+                          .with_thread_local(UpdateRenderablesSystem::new(Rc::clone(&game_context)))
         .with_thread_local(RenderingSystem::new(Rc::clone(&game_context)))
         .build();
 

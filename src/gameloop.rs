@@ -7,9 +7,9 @@ pub fn run(dispatcher: &mut specs::Dispatcher, world: &mut specs::World) {
         world.write_resource::<GameState>().tick();
         dispatcher.dispatch(world);
         world.maintain();
+        std::thread::yield_now();
         if !world.write_resource::<GameState>().continuing {
             break;
         }
-        std::thread::yield_now();
     }
 }

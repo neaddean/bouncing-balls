@@ -1,10 +1,11 @@
+use std::time::{Instant};
+
 use specs::{ReadExpect, System, WriteExpect};
 
 use crate::constants::SIMULATION_DURATION;
-
 use crate::resources;
 use crate::resources::GameState;
-
+use tracing::info;
 pub struct PhysicsSystem {
     accum: f32,
 }
@@ -26,8 +27,10 @@ impl<'a> System<'a> for PhysicsSystem {
 
         self.accum += game_state.this_duration().as_secs_f32();
         while self.accum > SIMULATION_DURATION {
+            let now = Instant::now();
             self.accum -= SIMULATION_DURATION;
             physical_world.step();
+            info!("physics step: {}", now.elapsed().as_micros());
         }
     }
 }

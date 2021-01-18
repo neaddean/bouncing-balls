@@ -1,10 +1,12 @@
-use crate::constants::SIMULATION_DURATION;
-use log::debug;
 use nalgebra::{RealField, Vector3};
 use nphysics3d::force_generator::DefaultForceGeneratorSet;
 use nphysics3d::joint::DefaultJointConstraintSet;
 use nphysics3d::object::{DefaultBodySet, DefaultColliderSet};
+use nphysics3d::solver::SignoriniModel;
 use nphysics3d::world::{DefaultGeometricalWorld, DefaultMechanicalWorld};
+use tracing::{debug, instrument};
+
+use crate::constants::SIMULATION_DURATION;
 
 pub struct PhysicsWorldN<N: RealField> {
     pub mechanical_world: DefaultMechanicalWorld<N>,
@@ -21,6 +23,7 @@ impl PhysicsWorld {
     pub fn new() -> Self {
         let mut mechanical_world = DefaultMechanicalWorld::new(Vector3::new(0.0, -9.81, 0.0));
         mechanical_world.set_timestep(SIMULATION_DURATION);
+        mechanical_world.solver.set_contact_model(Box::new(SignoriniModel::new()));
         let geometrical_world = DefaultGeometricalWorld::new();
         let bodies = DefaultBodySet::new();
         let colliders = DefaultColliderSet::<f32>::new();
@@ -36,6 +39,7 @@ impl PhysicsWorld {
         }
     }
 
+    #[instrument(skip(self))]
     pub fn step(&mut self) {
         debug!("stepping physics");
         self.mechanical_world.step(
@@ -44,6 +48,15 @@ impl PhysicsWorld {
             &mut self.colliders,
             &mut self.joint_constraints,
             &mut self.force_generators,
+        );
+    }
+
+    pub fn maintain(&mut self) {
+        self.mechanical_world.maintain(
+            &mut self.geometrical_world,
+            &mut self.bodies,
+            &mut self.colliders,
+            &mut self.joint_constraints,
         );
     }
 }
