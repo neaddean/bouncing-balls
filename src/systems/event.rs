@@ -53,7 +53,7 @@ impl<'a> System<'a> for EventSystem {
                                     thread_rng().gen_range(1.0..25.0),
                                     thread_rng().gen_range(-10.0..10.0),
                                 ),
-                                radius: 0.25,
+                                radius: 1.0,
                             });
                         }
                         (Key::F, false, Modifiers::Control) => {

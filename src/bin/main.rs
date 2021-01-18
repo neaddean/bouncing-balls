@@ -1,11 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use kiss3d::camera::ArcBall;
 use kiss3d::window::{CanvasSetup, NumSamples, Window};
 use nalgebra as na;
 use specs::{DispatcherBuilder, World, WorldExt};
 
+// use kiss3d::camera::ArcBall;
+use balz::camera::ArcBall;
 use balz::context::GameContext;
 use balz::entities;
 use balz::resources::{CameraBox, EntityQueue, GameState, PhysicsWorld};
@@ -13,13 +14,13 @@ use balz::systems::*;
 
 fn main() {
     simplelog::SimpleLogger::init(
-        simplelog::LevelFilter::Debug,
+        simplelog::LevelFilter::Info,
         simplelog::ConfigBuilder::new()
             // .add_filter_allow_str("balz")
             .set_time_format("%H:%M:%S%.3f".to_string())
             .build(),
     )
-    .expect("could not setup logging");
+        .expect("could not setup logging");
 
     let canvas_config = CanvasSetup {
         vsync: false,
@@ -34,17 +35,13 @@ fn main() {
 
     world.insert(PhysicsWorld::new());
 
-    let eye = na::Point3::new(10.0, 30.0, 10.0);
-    let at = na::Point3::origin();
     {
-        let mut camera =
-            ArcBall::new_with_frustrum(std::f32::consts::PI / 4.0, 0.1, 1024.0, eye, at);
-        camera.set_min_pitch(0.0);
-        world.insert(CameraBox {
-            camera: Box::new(camera),
-        });
+        let eye = na::Point3::new(10.0, 30.0, 10.0);
+        let at = na::Point3::origin();
+        let mut camera = ArcBall::new_with_frustrum(std::f32::consts::PI / 4.0, 0.1, 1024.0, eye, at);
+        camera.set_max_pitch(std::f32::consts::PI / 2.0);
+        world.insert(CameraBox { camera: Box::new(camera) });
     }
-
     let ref mut dispatcher = DispatcherBuilder::new()
         .with(EventSystem, "events", &[])
         .with(PhysicsSystem::new(), "physics", &["events"])
