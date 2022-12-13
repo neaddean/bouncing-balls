@@ -8,8 +8,10 @@ use kiss3d::window::Window;
 pub struct GameContext {
     window: Window,
     gfx_manager: HashMap<u32, Rc<RefCell<SceneNode>>>,
-    last_assigned_id: u32,
+    last_assigned_id: NodeId,
 }
+
+type NodeId = u32;
 
 impl GameContext {
     pub fn window_mut(&mut self) -> &mut Window {
@@ -35,7 +37,7 @@ impl GameContext {
         return self.last_assigned_id - 1;
     }
 
-    pub fn remove_gfx(&mut self, node_id: u32) {
+    pub fn remove_gfx(&mut self, node_id: NodeId) {
         let ref mut node = self
             .gfx_manager
             .get(&node_id)
@@ -44,7 +46,7 @@ impl GameContext {
         self.window.remove_node(node);
     }
 
-    pub fn get_gfx(&mut self, node_id: u32) -> RefMut<SceneNode> {
+    pub fn get_gfx(&mut self, node_id: NodeId) -> RefMut<SceneNode> {
         self.gfx_manager
             .get(&node_id)
             .expect("could not find node")

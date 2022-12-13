@@ -4,7 +4,7 @@ use nphysics3d::joint::DefaultJointConstraintSet;
 use nphysics3d::object::{DefaultBodySet, DefaultColliderSet};
 use nphysics3d::solver::SignoriniModel;
 use nphysics3d::world::{DefaultGeometricalWorld, DefaultMechanicalWorld};
-use tracing::{debug, instrument};
+use tracing::{debug};
 
 use crate::constants::SIMULATION_DURATION;
 
@@ -39,7 +39,7 @@ impl PhysicsWorld {
         }
     }
 
-    #[instrument(skip(self))]
+    // #[instrument(skip(self))]
     pub fn step(&mut self) {
         debug!("stepping physics");
         self.mechanical_world.step(

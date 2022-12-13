@@ -46,5 +46,6 @@ impl<'a> System<'a> for EntityRemovalSystem {
             physical_world.bodies.remove(this_physical.body_handle);
             physical_world.colliders.remove(this_physical.collider_handle);
         }
+        // physical_world.maintain();
     }
 }

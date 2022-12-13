@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use specs::{System, WriteExpect};
-use tracing::info;
+use tracing::debug;
 
 use crate::context::GameContext;
 use crate::resources;
@@ -41,9 +41,9 @@ impl<'a> System<'a> for RenderingSystem {
             self.accum -= 1.0 / game_state.sw_frame_limit_fps;
             self.accum = 0.0;
 
-            info!("render start");
+            debug!("render start");
             game_state.continuing = window.render_with_camera(&mut *camerabox.camera.as_mut());
-            info!("render stop");
+            debug!("render stop");
         }
     }
 }

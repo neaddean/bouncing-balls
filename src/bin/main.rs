@@ -4,19 +4,20 @@ use std::rc::Rc;
 use kiss3d::window::{CanvasSetup, NumSamples, Window};
 use nalgebra as na;
 use specs::{DispatcherBuilder, World, WorldExt};
-
+use uuid::Uuid;
 // use kiss3d::camera::ArcBall;
 use balz::camera::ArcBall;
 use balz::context::GameContext;
 use balz::entities;
 use balz::resources::{CameraBox, EntityQueue, GameState, PhysicsWorld};
 use balz::systems::*;
+use caelex::CaelexClientBuilder;
 
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>>  {
     balz::setup_logging();
 
     let canvas_config = CanvasSetup {
-        vsync: false,
+        vsync: true,
         samples: NumSamples::Two,
     };
     let window = Window::new_with_setup("asdf", 800, 600, canvas_config);
@@ -39,12 +40,13 @@ fn main() {
     }
     let ref mut dispatcher = DispatcherBuilder::new()
         .with(EventSystem, "events", &[])
-        // .with(PhysicsSystem::new(), "physics", &["events"])
+        .with(PhysicsSystem::new(), "physics", &["events"])
         .with_thread_local(EntityCreatorSystem::new(Rc::clone(&game_context)))
-        .with_thread_local(PhysicsSystem::new())
+        // .with_thread_local(PhysicsSystem::new())
         .with_thread_local(InputSystem::new(Rc::clone(&game_context)))
-                          .with_thread_local(UpdateRenderablesSystem::new(Rc::clone(&game_context)))
+        .with_thread_local(UpdateRenderablesSystem::new(Rc::clone(&game_context)))
         .with_thread_local(RenderingSystem::new(Rc::clone(&game_context)))
+        .with_thread_local(EntityRemovalSystem::new(Rc::clone(&game_context)))
         .build();
 
     dispatcher.setup(world);
@@ -59,4 +61,5 @@ fn main() {
     }
 
     balz::gameloop::run(dispatcher, world);
+    Ok(())
 }

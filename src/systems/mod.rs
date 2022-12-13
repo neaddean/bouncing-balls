@@ -15,3 +15,4 @@ mod physical_entities;
 mod physics;
 mod render;
 mod update_renderables;
+pub(crate) mod caelex;

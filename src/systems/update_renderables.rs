@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use specs::{Entities, join::Join, ReadStorage, System, Write, WriteExpect};
-use tracing::trace;
+use tracing::{trace};
 
 use crate::components::*;
 use crate::context::GameContext;
@@ -37,12 +37,10 @@ impl<'a> System<'a> for UpdateRenderablesSystem {
         ) = data;
         let ref mut game_context = self.game_context.borrow_mut();
         physical_world.maintain();
+
         for (phys, rend, entity) in (&physicals, &renderables, &entities).join() {
             let col = physical_world.colliders.get(phys.collider_handle);
-            // need to fix this. world and physics maintain must be called together bfore these steps
-            if col.is_none(){
-                continue
-            }
+
             let col = col.unwrap();
             let mut gfx_node = game_context.get_gfx(rend.gfx_id);
             let pos = *col.position();

@@ -15,9 +15,15 @@ ncollide3d = "0.27.0"
 nphysics3d = "0.19.0"
 nalgebra = "0.24.0"
 kiss3d = { version = "0.29.0", features = ["conrod"] }
+#caelex = { path = "../caelex-client-rs" }
+uuid = { version = "0.8.2", features = ["serde", "v4"] }
+
+#approx = "0.4.0"
 
 tracing = { version = "0.1.22", features = ["log-always", "log"] }
 tracing-timing = "0.4.3"
 
 log = "0.4.13"
 simplelog = "0.9.0"
+
+tokio = { version = "1.0", features = ["full"] }
